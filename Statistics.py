@@ -71,7 +71,7 @@ def get_statistics(df, stats_directory, algorithms=None, dims=None, functions=No
             for row_player in algorithms:
                 for col_player in algorithms:
                     if row_player == col_player:
-                        df.loc[row_player, col_player] = '0'  # No match against themselves
+                        result.loc[row_player, col_player] = '0'  # No match against themselves
                     else:
                         # Result
                         rp_result = df[(df['algorithm'] == row_player) & (df['function'] == fun) & (df['dim'] == dim)]['ofvs']
