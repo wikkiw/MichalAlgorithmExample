@@ -1,4 +1,5 @@
-,DErand1bin1,DErand1bin2,DErand1bin3,score
-DErand1bin2,+,0,+,2
-DErand1bin3,+,-,0,0
-DErand1bin1,0,-,-,-2
+,DErand1bin1,DErand1bin2,DErand1bin3,PSO,score
+DErand1bin2,+,0,+,+,3
+DErand1bin3,+,-,0,+,1
+DErand1bin1,0,-,-,+,-1
+PSO,-,-,-,0,-3

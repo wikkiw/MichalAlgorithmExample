@@ -160,7 +160,9 @@ def get_statistics(df, stats_directory, algorithms=None, dims=None, functions=No
 
 def main():
     # where to look for result files
-    project_home_dir = 'C:\\Users\\aviktorin\\PycharmProjects\\MichalAlgorithmExample'
+    #project_home_dir = 'C:\\Users\\aviktorin\\PycharmProjects\\MichalAlgorithmExample'
+    project_home_dir = 'D:\\WorkBench\\2024_GPTOptimizer\\pythonCodes\\MichalAlgorithmExample'
+
     results_directory = os.path.join(project_home_dir, 'Results')
     # where the stats should be created
     stats_directory = os.path.join(project_home_dir, 'Statistics')
