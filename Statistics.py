@@ -64,18 +64,45 @@ def get_statistics(df, stats_directory, algorithms=None, dims=None, functions=No
     if functions is None:
         functions = df['function'].unique()
 
+    columns = ['algorithm', 'function', 'dim', 'min', 'max', 'median', 'mean', 'std']
+    desc_stats = pd.DataFrame(columns=columns)
+
+    res_columns = np.concatenate((algorithms, ['score']))
+
+    df_rank_all = pd.DataFrame(index=algorithms, columns=['score','ranking'])
+    dict_rank_all = {}
+    for a in algorithms:
+        dict_rank_all[a] = 0
+
     for dim in dims:
+
+        df_rank_dim = pd.DataFrame(index=algorithms, columns=['score', 'ranking'])
+        dict_rank_dim = {}
+        for a in algorithms:
+            dict_rank_dim[a] = 0
+
         for fun in functions:
 
-            result = pd.DataFrame(index=algorithms, columns=algorithms)
+            result = pd.DataFrame(index=algorithms, columns=res_columns)
+
             for row_player in algorithms:
+
+                rp_result = list(df[(df['algorithm'] == row_player) & (df['function'] == fun) & (df['dim'] == dim)]['ofvs'])[0]
+
+                new_row = {'algorithm': row_player, 'function': fun, 'dim': dim, 'min': min(rp_result),
+                           'max': max(rp_result), 'median': np.median(rp_result), 'mean': np.mean(rp_result),
+                           'std': np.std(rp_result)}
+
+                desc_stats.loc[len(desc_stats)] = new_row
+                result.loc[row_player, 'score'] = 0
+
                 for col_player in algorithms:
                     if row_player == col_player:
                         result.loc[row_player, col_player] = '0'  # No match against themselves
                     else:
                         # Result
-                        rp_result = df[(df['algorithm'] == row_player) & (df['function'] == fun) & (df['dim'] == dim)]['ofvs']
-                        cp_result = df[(df['algorithm'] == col_player) & (df['function'] == fun) & (df['dim'] == dim)]['ofvs']
+                        rp_result = list(df[(df['algorithm'] == row_player) & (df['function'] == fun) & (df['dim'] == dim)]['ofvs'])[0]
+                        cp_result = list(df[(df['algorithm'] == col_player) & (df['function'] == fun) & (df['dim'] == dim)]['ofvs'])[0]
 
                         stat, p_value = ranksums(rp_result, cp_result)
 
@@ -83,16 +110,51 @@ def get_statistics(df, stats_directory, algorithms=None, dims=None, functions=No
                         if p_value < alpha:
                             if stat < 0:
                                 sign = '+'
+                                result.loc[row_player, 'score'] += 1
+                                dict_rank_all[row_player] += 1
+                                dict_rank_dim[row_player] += 1
                             else:
                                 sign = '-'
+                                result.loc[row_player, 'score'] -= 1
+                                dict_rank_all[row_player] -= 1
+                                dict_rank_dim[row_player] -= 1
                         else:
                             sign = '='
 
-                        result.loc[row_player, col_player] = sign # Random result for illustration
+                        result.loc[row_player, col_player] = sign  # Random result for illustration
 
+            result = result.sort_values(by='score', ascending=False)
             filename = 'S_F_' + fun + '_D_' + str(dim) + '.csv'
             result.to_csv(os.path.join(stats_directory, filename), index=True)
             print(f'Stats file {filename} created.')
+
+        for a in algorithms:
+            df_rank_dim.loc[a, 'score'] = dict_rank_dim[a]
+
+        df_rank_dim = df_rank_dim.sort_values(by='score', ascending=False)
+        i = 1
+        for ind in df_rank_dim.index:
+            df_rank_dim['ranking'][ind] = i
+            i += 1
+        filename = 'S_ranking_D_' + str(dim) + '.csv'
+        df_rank_dim.to_csv(os.path.join(stats_directory, filename), index=True)
+        print(f'Dim {dim} ranking file {filename} created.')
+
+    filename = 'S_descriptive.csv'
+    desc_stats.to_csv(os.path.join(stats_directory, filename), index=False)
+    print(f'Descriptive stats file {filename} created.')
+
+    for a in algorithms:
+        df_rank_all.loc[a, 'score'] = dict_rank_all[a]
+
+    df_rank_all = df_rank_all.sort_values(by='score', ascending=False)
+    i = 1
+    for ind in df_rank_all.index:
+        df_rank_all['ranking'][ind] = i
+        i += 1
+    filename = 'S_ranking.csv'
+    df_rank_all.to_csv(os.path.join(stats_directory, filename), index=True)
+    print(f'Overall ranking file {filename} created.')
 
 
 

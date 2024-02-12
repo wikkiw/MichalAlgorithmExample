@@ -2,18 +2,16 @@ import numpy as np
 
 class Algorithm():
 
-    def __init__(self, func, dim, bounds, max_evals):
+    def __init__(self, func, dim, bounds, max_evals, params=None):
 
+        if params is None:
+            self.params = {'pop_size': 20, 'F': 0.8, 'CR': 0.9}
+        else:
+            self.params = params
         self.func = func
         self.dim = dim
         self.bounds = bounds
         self.max_evals = max_evals
-
-        self.params = {
-            'pop_size': 20,
-            'F': 0.8,
-            'CR': 0.9,
-        }
 
     def run(self):
         pop_size = self.params.get('pop_size', 10 * self.dim)

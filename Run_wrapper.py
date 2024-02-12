@@ -25,7 +25,8 @@ def get_algorihms(directory_path):
             file_path = os.path.join(directory_path, filename)
             # Check if it is a file
             if os.path.isfile(file_path) and filename.startswith('A_'):
-                algorithms.append(Path(filename).stem)
+                if filename.__contains__('template') == False:
+                    algorithms.append(Path(filename).stem)
     else:
         print(f"The path {directory_path} is not a directory.")
 
@@ -51,7 +52,8 @@ def get_functions(directory_path):
             file_path = os.path.join(directory_path, filename)
             # Check if it is a file
             if os.path.isfile(file_path) and filename.startswith('F_'):
-                functions.append(Path(filename).stem)
+                if filename.__contains__('template') == False:
+                    functions.append(Path(filename).stem)
     else:
         print(f"The path {directory_path} is not a directory.")
 
@@ -82,7 +84,17 @@ def run_all(dims, algorithms, functions, runs, max_evals, export_path):
                     export_data.append(best)
 
                 with open(os.path.join(export_path, export_name),'w') as file:
-                    json.dump(export_data, file)
+                    json.dump(export_data, file, cls=NpEncoder)
+
+class NpEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.integer):
+            return int(obj)
+        if isinstance(obj, np.floating):
+            return float(obj)
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        return super(NpEncoder, self).default(obj)
 
 def main():
 
@@ -98,7 +110,7 @@ def main():
     functions = get_functions(functions_directory)
 
     #func = objective_function  # Objective function
-    dims = [5, 10, 20]  # Dimension of the problem
+    dims = [5, 10, 20, 30, 50]  # Dimension of the problem
     max_evals = 1000  # Maximum number of evaluations
     runs = 30
     export_path = os.path.join(project_home_dir, 'Results')
