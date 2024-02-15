@@ -1,6 +1,7 @@
 ,score,ranking
-DErand1bin2,8,1
-DErand1bin3,4,2
-DErand1bin1,0,3
+DErand1bin2,10,1
+DErand1bin3,6,2
+DErand1bin1,2,3
 PSO,-4,4
-SOMA-ATA,-8,5
+SOMA-ATO,-4,5
+SOMA-ATA,-10,6
