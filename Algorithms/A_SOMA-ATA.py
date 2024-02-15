@@ -57,7 +57,7 @@ class Algorithm():
                             # Perturbation mask
                             mask = (np.random.rand(self.dim) < prt).astype(int)
                             # trial step
-                            trial_temp = pop[i] + mask * (pop[j] - trial) * step
+                            trial_temp = pop[i] + mask * (pop[j] - pop[i]) * step
                             # bounds check
                             trial_temp = np.clip(trial_temp, self.bounds[0], self.bounds[1])
                             trial_temp_cf = self.func(trial_temp)
