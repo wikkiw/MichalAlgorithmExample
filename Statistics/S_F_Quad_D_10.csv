@@ -1,5 +1,6 @@
-,DErand1bin1,DErand1bin2,DErand1bin3,PSO,score
-DErand1bin2,+,0,+,+,3
-DErand1bin3,+,-,0,+,1
-DErand1bin1,0,-,-,+,-1
-PSO,-,-,-,0,-3
+,DErand1bin1,DErand1bin2,DErand1bin3,PSO,SOMA-ATA,score
+DErand1bin2,+,0,+,+,+,4
+DErand1bin3,+,-,0,+,+,2
+DErand1bin1,0,-,-,+,+,0
+PSO,-,-,-,0,+,-2
+SOMA-ATA,-,-,-,-,0,-4

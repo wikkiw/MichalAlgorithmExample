@@ -42,38 +42,75 @@ class Algorithm():
             'eval_num': np.argmin(pop_cf)
         }
 
-        for i in range(pop_size):
-            for j in range(pop_size):
-                if i != j:  # An individual does not move towards itself
-                    # Initialize trial individual
-                    trial = np.copy(pop[i])
-                    for step in np.arange(0, path_length, step_size):
-                        # Perturbation mask
-                        mask = np.random.rand(self.dim) < prt
+        while evals < self.max_evals:
 
-                        print(mask)
-                        return
+            new_pop = np.copy(pop)
+            new_pop_cf = np.copy(pop_cf)
 
+            for i in range(pop_size):
+                for j in range(pop_size):
+                    if i != j:  # An individual does not move towards itself
+                        # Initialize trial individual
+                        trial = np.copy(pop[i])
+                        trial_cf = pop_cf[i]
+                        for step in np.arange(step_size, path_length, step_size):
+                            # Perturbation mask
+                            mask = (np.random.rand(self.dim) < prt).astype(int)
+                            # trial step
+                            trial_temp = pop[i] + mask * (pop[j] - trial) * step
+                            # bounds check
+                            trial_temp = np.clip(trial_temp, self.bounds[0], self.bounds[1])
+                            trial_temp_cf = self.func(trial_temp)
+                            # new trial
+                            if trial_temp_cf < trial_cf:
+                                trial_cf = trial_temp_cf
+                                trial = np.copy(trial_temp)
+                                # test best
+                                if trial_cf < best["fitness"]:
+                                    best = {
+                                        'params': np.copy(trial),
+                                        'fitness': trial_cf,
+                                        'gen': gen,
+                                        'eval_num': evals + 1
+                                    }
 
-                        # Move towards another individual
-                        trial_temp = trial + mask * (pop[j] - trial) * step
-                        # Ensure trial is within bounds
-                        trial_temp = np.clip(trial_temp, self.bounds[:, 0], self.bounds[:, 1])
-                        trial_fitness = self.func(trial_temp)
-                        if trial_fitness < fitness[i]:
-                            trial = trial_temp
-                            fitness[i] = trial_fitness
+                            evals += 1
+                            if evals >= self.max_evals:
+                                break
 
+                            # stes end
+                            if evals >= self.max_evals:
+                                break
+                            pass
 
+                        # if i!=j wnd
+                        pass
 
+                    # for j end
+                    if evals >= self.max_evals:
+                        break
+                    pass
 
-        # Result
-        best = {
-            'params': [],
-            'fitness': -1,
-            'gen': 0,
-            'eval_num': 0
-        }
+                # copy trial to new population
+                new_pop[i] = np.copy(trial)
+                new_pop_cf[i] = trial_cf
+
+                # for i end
+                if evals >= self.max_evals:
+                    break
+                pass
+
+            # copy new pop to new gen
+            pop = np.copy(new_pop)
+            pop_cf = np.copy(new_pop_cf)
+            gen += 1
+
+            # main while end
+            if evals >= self.max_evals:
+                break
+            pass
+
+        pass
 
         return best
 
@@ -81,5 +118,5 @@ if __name__ == '__main__':
 
     from Functions import F_Sphere
 
-    algorithm = Algorithm(F_Sphere.evaluate, 3, [-5, 5], 1000)
-    algorithm.run()
+    algorithm = Algorithm(F_Sphere.evaluate, 3, [-5, 5], 100000)
+    print(algorithm.run())
