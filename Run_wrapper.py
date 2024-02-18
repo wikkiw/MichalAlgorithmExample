@@ -99,7 +99,8 @@ class NpEncoder(json.JSONEncoder):
 def main():
 
     #project_home_dir = 'C:\\Users\\aviktorin\\PycharmProjects\\MichalAlgorithmExample'
-    project_home_dir = 'D:\\WorkBench\\2024_GPTOptimizer\\pythonCodes\\MichalAlgorithmExample'
+    #project_home_dir = 'D:\\WorkBench\\2024_GPTOptimizer\\pythonCodes\\MichalAlgorithmExample'
+    project_home_dir = os.path.dirname(os.path.abspath(__file__))
 
     algorithms_directory = os.path.join(project_home_dir, 'Algorithms')
     functions_directory = os.path.join(project_home_dir, 'Functions')
