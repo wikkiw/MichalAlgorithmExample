@@ -1,7 +1,7 @@
-,DErand1bin1,DErand1bin2,DErand1bin3,PSO,SOMA-ATA,SOMA-ATO,score
-DErand1bin2,+,0,+,+,+,+,5
-DErand1bin1,0,-,=,+,+,+,2
-DErand1bin3,=,-,0,+,+,+,2
-SOMA-ATO,-,-,-,=,+,0,-2
-PSO,-,-,-,0,=,=,-3
-SOMA-ATA,-,-,-,=,0,-,-4
+,DErand1bin1,DErand1bin2,DErand1bin3,PSO,SOMA-ATA,SOMA-ATO,score,ranking
+DErand1bin2,+,0,+,+,+,+,5,1
+DErand1bin1,0,-,=,+,+,+,2,2
+DErand1bin3,=,-,0,+,+,+,2,3
+SOMA-ATO,-,-,-,=,+,0,-2,4
+PSO,-,-,-,0,=,=,-3,5
+SOMA-ATA,-,-,-,=,0,-,-4,6

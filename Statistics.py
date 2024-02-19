@@ -64,10 +64,10 @@ def get_statistics(df, stats_directory, algorithms=None, dims=None, functions=No
     if functions is None:
         functions = df['function'].unique()
 
-    columns = ['algorithm', 'function', 'dim', 'min', 'max', 'median', 'mean', 'std']
+    columns = ['algorithm', 'function', 'dim', 'min', 'max', 'median', 'mean', 'std', 'ranking']
     desc_stats = pd.DataFrame(columns=columns)
 
-    res_columns = np.concatenate((algorithms, ['score']))
+    res_columns = np.concatenate((algorithms, ['score', 'ranking']))
 
     df_rank_all = pd.DataFrame(index=algorithms, columns=['score','ranking'])
     dict_rank_all = {}
@@ -91,7 +91,7 @@ def get_statistics(df, stats_directory, algorithms=None, dims=None, functions=No
 
                 new_row = {'algorithm': row_player, 'function': fun, 'dim': dim, 'min': min(rp_result),
                            'max': max(rp_result), 'median': np.median(rp_result), 'mean': np.mean(rp_result),
-                           'std': np.std(rp_result)}
+                           'std': np.std(rp_result), 'ranking': 0}
 
                 desc_stats.loc[len(desc_stats)] = new_row
                 result.loc[row_player, 'score'] = 0
@@ -124,6 +124,14 @@ def get_statistics(df, stats_directory, algorithms=None, dims=None, functions=No
                         result.loc[row_player, col_player] = sign  # Random result for illustration
 
             result = result.sort_values(by='score', ascending=False)
+            # get algorithm name and its ranking
+            rank = 1
+            for index, _ in result.iterrows():
+                desc_stats.loc[(desc_stats['algorithm'] == index) & (desc_stats['function'] == fun) & (
+                        desc_stats['dim'] == dim), 'ranking'] = rank
+                result.loc[index,'ranking'] = rank
+                rank += 1
+
             filename = 'S_F_' + fun + '_D_' + str(dim) + '.csv'
             result.to_csv(os.path.join(stats_directory, filename), index=True)
             print(f'Stats file {filename} created.')
@@ -160,8 +168,6 @@ def get_statistics(df, stats_directory, algorithms=None, dims=None, functions=No
 
 def main():
     # where to look for result files
-    #project_home_dir = 'C:\\Users\\aviktorin\\PycharmProjects\\MichalAlgorithmExample'
-    #project_home_dir = 'D:\\WorkBench\\2024_GPTOptimizer\\pythonCodes\\MichalAlgorithmExample'
     project_home_dir = os.path.dirname(os.path.abspath(__file__))
 
     results_directory = os.path.join(project_home_dir, 'Results')
