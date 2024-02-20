@@ -18,6 +18,11 @@ def show2D(functions):
     plt.xlabel("x")  # Label for the x-axis
     plt.ylabel("cf(x)")  # Label for the y-axis
     plt.grid(True)  # Show grid
+
+    # Save the figure as a PNG file
+    _file = os.path.dirname(os.path.abspath(__file__)) + "\\Images\\" + "2D_" + functions + ".png"
+    plt.savefig(_file)
+
     plt.show()  # Display the plot
 
     pass
@@ -47,6 +52,10 @@ def show3D(functions):
 
     # Optional: Add a color bar which maps values to colors.
     fig.colorbar(surf, shrink=0.5, aspect=5)
+
+    # Save the figure as a PNG file
+    _file = os.path.dirname(os.path.abspath(__file__)) + "\\Images\\" + "3D_" + functions + ".png"
+    fig.savefig(_file)
 
     plt.show()
 
