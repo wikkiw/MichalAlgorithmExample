@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from Run_wrapper import get_functions
 
-def show2D(functions):
+def show2D(functions, output=True):
     f = __import__(functions)
 
     x = np.linspace(f.get_bounds()[0], f.get_bounds()[1], 1000)
@@ -19,15 +19,16 @@ def show2D(functions):
     plt.ylabel("cf(x)")  # Label for the y-axis
     plt.grid(True)  # Show grid
 
-    # Save the figure as a PNG file
-    _file = os.path.dirname(os.path.abspath(__file__)) + "\\Images\\" + "2D_" + functions + ".png"
-    plt.savefig(_file)
+    if output:
+        # Save the figure as a PNG file
+        _file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Images", "2D_" + functions + ".png")
+        plt.savefig(_file)
 
     plt.show()  # Display the plot
 
     pass
 
-def show3D(functions):
+def show3D(functions, output=True):
     f = __import__(functions)
 
     x = np.linspace(f.get_bounds()[0], f.get_bounds()[1], 100)
@@ -53,9 +54,10 @@ def show3D(functions):
     # Optional: Add a color bar which maps values to colors.
     fig.colorbar(surf, shrink=0.5, aspect=5)
 
-    # Save the figure as a PNG file
-    _file = os.path.dirname(os.path.abspath(__file__)) + "\\Images\\" + "3D_" + functions + ".png"
-    fig.savefig(_file)
+    if output:
+        # Save the figure as a PNG file
+        _file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Images", "3D_" + functions + ".png")
+        fig.savefig(_file)
 
     plt.show()
 

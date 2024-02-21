@@ -87,6 +87,7 @@ def get_statistics(df, stats_directory, algorithms=None, dims=None, functions=No
 
             for row_player in algorithms:
 
+                print(row_player, fun, dim)
                 rp_result = list(df[(df['algorithm'] == row_player) & (df['function'] == fun) & (df['dim'] == dim)]['ofvs'])[0]
 
                 new_row = {'algorithm': row_player, 'function': fun, 'dim': dim, 'min': min(rp_result),
