@@ -13,7 +13,7 @@ def show2D(functions, output=True):
     x = np.linspace(f.get_bounds()[0], f.get_bounds()[1], 1000)
     try:
         y = [f.evaluate(np.array(i)) for i in x]
-    except IndexError as inst:
+    except IndexError as _:
         print(f"Unable to create 2D grapoh of {f} function. Requires more dimensions.")
         return
 
