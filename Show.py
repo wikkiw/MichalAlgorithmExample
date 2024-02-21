@@ -11,7 +11,11 @@ def show2D(functions, output=True):
     f = __import__(functions)
 
     x = np.linspace(f.get_bounds()[0], f.get_bounds()[1], 1000)
-    y = [f.evaluate(np.array(i)) for i in x]
+    try:
+        y = [f.evaluate(np.array(i)) for i in x]
+    except IndexError as inst:
+        print(f"Unable to create 2D grapoh of {f} function. Requires more dimensions.")
+        return
 
     plt.plot(x, y)  # Plot x vs. y
     plt.title(functions)  # Title of the plot
