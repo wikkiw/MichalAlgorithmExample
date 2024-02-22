@@ -124,14 +124,12 @@ def get_statistics(df, stats_directory, algorithms=None, dims=None, functions=No
 
                         result.loc[row_player, col_player] = sign  # Random result for illustration
 
-            result = result.sort_values(by='score', ascending=False)
+            result['ranking'] = result['score'].rank(method='average', ascending=False)
+            result = result.sort_values(by='ranking')
             # get algorithm name and its ranking
-            rank = 1
             for index, _ in result.iterrows():
                 desc_stats.loc[(desc_stats['algorithm'] == index) & (desc_stats['function'] == fun) & (
-                        desc_stats['dim'] == dim), 'ranking'] = rank
-                result.loc[index,'ranking'] = rank
-                rank += 1
+                        desc_stats['dim'] == dim), 'ranking'] = result.loc[index, 'ranking']
 
             filename = 'S_F_' + fun + '_D_' + str(dim) + '.csv'
             result.to_csv(os.path.join(stats_directory, filename), index=True)
@@ -140,11 +138,9 @@ def get_statistics(df, stats_directory, algorithms=None, dims=None, functions=No
         for a in algorithms:
             df_rank_dim.loc[a, 'score'] = dict_rank_dim[a]
 
-        df_rank_dim = df_rank_dim.sort_values(by='score', ascending=False)
-        i = 1
-        for ind in df_rank_dim.index:
-            df_rank_dim['ranking'][ind] = i
-            i += 1
+        df_rank_dim['ranking'] = df_rank_dim['score'].rank(method='average', ascending=False)
+        df_rank_dim = df_rank_dim.sort_values(by='ranking')
+
         filename = 'S_ranking_D_' + str(dim) + '.csv'
         df_rank_dim.to_csv(os.path.join(stats_directory, filename), index=True)
         print(f'Dim {dim} ranking file {filename} created.')
@@ -156,11 +152,10 @@ def get_statistics(df, stats_directory, algorithms=None, dims=None, functions=No
     for a in algorithms:
         df_rank_all.loc[a, 'score'] = dict_rank_all[a]
 
-    df_rank_all = df_rank_all.sort_values(by='score', ascending=False)
-    i = 1
-    for ind in df_rank_all.index:
-        df_rank_all['ranking'][ind] = i
-        i += 1
+
+    df_rank_all['ranking'] = df_rank_all['score'].rank(method='average', ascending=False)
+    df_rank_all = df_rank_all.sort_values(by='ranking')
+
     filename = 'S_ranking.csv'
     df_rank_all.to_csv(os.path.join(stats_directory, filename), index=True)
     print(f'Overall ranking file {filename} created.')
