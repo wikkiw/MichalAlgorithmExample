@@ -33,7 +33,7 @@ for dir in "$@"; do
     fi
     session_name=$(basename "$dir")                 # Use directory name for the session
     tmux new-session -d -s "$session_name"          # Create a new detached tmux session
-    tmux send-keys -t "$session_name" "cd $dir; source ~/.venv/bin/activate; python Run_wrapper.py; cp Results/* ../Results/; touch DONE" C-m
+    tmux send-keys -t "$session_name" "cd $dir; source ~/.venv/bin/activate; python Run_wrapper.py; cp Results/* ../Results/; touch DONE; exit" C-m
 done
 ' bash {} +
 
