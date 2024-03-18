@@ -28,8 +28,11 @@ MANIFEST
 
 # Generated results, statistics and images
 Images/*
+!Images/.gitkeep
 Results/*
+!Results/.gitkeep
 Statistics/*
+!Statistics/.gitkeep
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
