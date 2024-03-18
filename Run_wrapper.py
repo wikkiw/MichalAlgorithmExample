@@ -4,6 +4,8 @@ from pathlib import Path
 import json
 import numpy as np
 
+from Algorithms.Runner import Runner
+
 
 def get_algorihms(directory_path):
     """
@@ -67,24 +69,33 @@ def run_all(dims, algorithms, functions, runs, max_evals, export_path):
 
     for alg in algs:
 
+        flag_OK = True
+
         for fun in funs_list:
 
             bounds = fun.get_bounds()
             for dim in dims:
                 # Creating an algorithm instance
-                a = alg.Algorithm(fun.evaluate, dim, bounds, max_evals)
+                #a = alg.Algorithm(fun.evaluate, dim, bounds, max_evals)
                 export_data = []
                 export_name = 'R_' + alg.__name__ + '_' + fun.__name__ + "_" + str(dim) + '.json'
                 for run in range(runs):
+
+                    a = Runner(alg, fun, dim, bounds, max_evals)
                     best = a.run()
+                    # Check for any errors during evaluation
+                    if best['error'] != 0:
+                        flag_OK = False
+                        break
                     # ndarrays are not JSON serializable!
                     if isinstance(best['params'], np.ndarray):
                         best['params'] = best['params'].tolist()
                     best['run'] = run
                     export_data.append(best)
 
-                with open(os.path.join(export_path, export_name),'w') as file:
-                    json.dump(export_data, file, cls=NpEncoder)
+                if flag_OK:
+                    with open(os.path.join(export_path, export_name),'w') as file:
+                        json.dump(export_data, file, cls=NpEncoder)
 
 class NpEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -112,9 +123,9 @@ def main():
     functions = get_functions(functions_directory)
 
     #func = objective_function  # Objective function
-    dims = [5, 10, 20, 30, 50]  # Dimension of the problem
+    dims = [5, 10]  # Dimension of the problem
     max_evals = 1000  # Maximum number of evaluations
-    runs = 30
+    runs = 3
     export_path = os.path.join(project_home_dir, 'Results')
 
     run_all(dims, algorithms, functions, runs, max_evals, export_path)

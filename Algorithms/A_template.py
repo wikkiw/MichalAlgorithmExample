@@ -2,6 +2,7 @@ import numpy as np
 
 class Algorithm():
 
+
     def __init__(self, func, dim, bounds, max_evals, params=None):
 
         # Params is for algorithm specific parameters
@@ -16,15 +17,10 @@ class Algorithm():
 
     def run(self):
 
-        # Algorithm body
+        # Best found objective function value
+        best = 0
 
-        # Result
-        best = {
-            'params': [],
-            'fitness': -1,
-            'gen': 0,
-            'eval_num': 0
-        }
+        # Algorithm body
 
         return best
 
