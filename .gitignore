@@ -27,9 +27,9 @@ share/python-wheels/
 MANIFEST
 
 # Generated results, statistics and images
-Images/
-Results/
-Statistics/
+Images/*
+Results/*
+Statistics/*
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
