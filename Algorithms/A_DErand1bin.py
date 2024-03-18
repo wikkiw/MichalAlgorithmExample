@@ -5,7 +5,7 @@ class Algorithm():
     def __init__(self, func, dim, bounds, max_evals, params=None):
 
         if params is None:
-            self.params = {'pop_size': 20, 'F': 0.5, 'CR': 0.1}
+            self.params = {'pop_size': 20, 'F': 0.8, 'CR': 0.9}
         else:
             self.params = params
         self.func = func
@@ -25,12 +25,7 @@ class Algorithm():
         gen = 0
 
         best_index = np.argmin(fitness)
-        best = {
-            'params': pop[best_index],
-            'fitness': fitness[best_index],
-            'gen': gen,
-            'eval_num': best_index
-        }
+        best = fitness[best_index]
 
         while evals < self.max_evals:
             for i in range(pop_size):
@@ -52,11 +47,8 @@ class Algorithm():
                     pop[i] = trial
                     fitness[i] = trial_fitness
 
-                    if trial_fitness <= best['fitness']:
-                        best['fitness'] = trial_fitness
-                        best['params'] = trial
-                        best['gen'] = gen
-                        best['eval_num'] = evals
+                    if trial_fitness <= best:
+                        best = trial_fitness
 
                 if evals >= self.max_evals:
                     break

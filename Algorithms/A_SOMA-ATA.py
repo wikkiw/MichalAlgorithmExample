@@ -35,12 +35,7 @@ class Algorithm():
         gen = 0
         best_index = np.argmin(pop_cf)
 
-        best = {
-            'params': pop[best_index],
-            'fitness': pop_cf[best_index],
-            'gen': gen,
-            'eval_num': np.argmin(pop_cf)
-        }
+        best = pop_cf[best_index]
 
         while evals < self.max_evals:
 
@@ -66,19 +61,14 @@ class Algorithm():
                                 trial_cf = trial_temp_cf
                                 trial = np.copy(trial_temp)
                                 # test best
-                                if trial_cf < best["fitness"]:
-                                    best = {
-                                        'params': np.copy(trial),
-                                        'fitness': trial_cf,
-                                        'gen': gen,
-                                        'eval_num': evals + 1
-                                    }
+                                if trial_cf < best:
+                                    best = trial_cf
 
                             evals += 1
                             if evals >= self.max_evals:
                                 break
 
-                            # stes end
+                            # steps end
                             if evals >= self.max_evals:
                                 break
                             pass

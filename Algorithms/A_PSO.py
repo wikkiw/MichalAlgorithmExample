@@ -38,12 +38,7 @@ class Algorithm():
         evals = pop_size
         gen = 0
 
-        best = {
-            'params': gbest,
-            'fitness': gbest_cost,
-            'gen': gen,
-            'eval_num': np.argmin(pbest_cost)
-        }
+        best = gbest_cost
 
         # main loop
         while evals < self.max_evals:
@@ -65,11 +60,8 @@ class Algorithm():
                     pbest[i] = np.copy(pop[i])
                     pbest_cost[i] = current_cost
 
-                if current_cost <= best['fitness']:
-                    best['fitness'] = current_cost
-                    best['params'] = np.copy(pop[i])
-                    best['gen'] = gen
-                    best['eval_num'] = evals
+                if current_cost <= best:
+                    best = current_cost
 
                 if evals >= self.max_evals:
                     break

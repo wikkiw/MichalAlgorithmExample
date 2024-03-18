@@ -16,16 +16,13 @@ class Algorithm():
 
     def run(self):
 
-        best = {}
+        best = None
 
         # Algorithm body
         for eval in range(self.max_evals):
             params = np.random.rand(self.dim) * (self.bounds[1] - self.bounds[0]) + self.bounds[0]
             fitness = self.func(params)
-            if best == {} or fitness < best['fitness']:
-                best['params'] = params
-                best['fitness'] = fitness
-                best['eval_num'] = eval
-                best['gen'] = eval
+            if best is None or fitness < best:
+                best = fitness
 
         return best

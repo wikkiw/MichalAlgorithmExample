@@ -25,18 +25,13 @@ class Algorithm():
         gen = 0
 
         best_index = np.argmin(fitness)
-        best = {
-            'params': pop[best_index],
-            'fitness': fitness[best_index],
-            'gen': gen,
-            'eval_num': best_index
-        }
+        best = fitness[best_index]
 
         while evals < self.max_evals:
             for i in range(pop_size):
                 # Mutation: rand/1
                 idxs = [idx for idx in range(pop_size) if idx != i]
-                a = best['params']
+                a = pop[best_index]
                 b, c = pop[np.random.choice(idxs, 2, replace=False)]
                 mutant = np.clip(a + F * (b - c), self.bounds[0], self.bounds[1])
 
@@ -53,11 +48,8 @@ class Algorithm():
                     pop[i] = trial
                     fitness[i] = trial_fitness
 
-                    if trial_fitness <= best['fitness']:
-                        best['fitness'] = trial_fitness
-                        best['params'] = trial
-                        best['gen'] = gen
-                        best['eval_num'] = evals
+                    if trial_fitness <= best:
+                        best = trial_fitness
 
                 if evals >= self.max_evals:
                     break
