@@ -74,6 +74,9 @@ def get_statistics(df, stats_directory, algorithms=None, dims=None, functions=No
     for a in algorithms:
         dict_rank_all[a] = 0
 
+    # Dataframe for pair-wise results
+    df_pairwise = pd.DataFrame(0, index=algorithms, columns=algorithms)
+
     for dim in dims:
 
         df_rank_dim = pd.DataFrame(index=algorithms, columns=['score', 'ranking'])
@@ -114,11 +117,13 @@ def get_statistics(df, stats_directory, algorithms=None, dims=None, functions=No
                                 result.loc[row_player, 'score'] += 1
                                 dict_rank_all[row_player] += 1
                                 dict_rank_dim[row_player] += 1
+                                df_pairwise.loc[row_player, col_player] += 1
                             else:
                                 sign = '-'
                                 result.loc[row_player, 'score'] -= 1
                                 dict_rank_all[row_player] -= 1
                                 dict_rank_dim[row_player] -= 1
+                                df_pairwise.loc[row_player, col_player] -= 1
                         else:
                             sign = '='
 
@@ -126,11 +131,12 @@ def get_statistics(df, stats_directory, algorithms=None, dims=None, functions=No
 
             result['ranking'] = result['score'].rank(method='average', ascending=False)
             result = result.sort_values(by='ranking')
-            # get algorithm name and its ranking
+            # Get algorithm name and its ranking
             for index, _ in result.iterrows():
                 desc_stats.loc[(desc_stats['algorithm'] == index) & (desc_stats['function'] == fun) & (
                         desc_stats['dim'] == dim), 'ranking'] = result.loc[index, 'ranking']
 
+            # Results on specific function
             filename = 'S_F_' + fun + '_D_' + str(dim) + '.csv'
             result.to_csv(os.path.join(stats_directory, filename), index=True)
             print(f'Stats file {filename} created.')
@@ -141,10 +147,17 @@ def get_statistics(df, stats_directory, algorithms=None, dims=None, functions=No
         df_rank_dim['ranking'] = df_rank_dim['score'].rank(method='average', ascending=False)
         df_rank_dim = df_rank_dim.sort_values(by='ranking')
 
+        # Ranking over one dimension
         filename = 'S_ranking_D_' + str(dim) + '.csv'
         df_rank_dim.to_csv(os.path.join(stats_directory, filename), index=True)
         print(f'Dim {dim} ranking file {filename} created.')
 
+    # Pair-wise results output
+    filename = 'S_pairwise.csv'
+    df_pairwise.to_csv(os.path.join(stats_directory, filename))
+    print(f'Pair-wise stats file {filename} created.')
+
+    # Descriptive statistics on all functions in all dimensions
     filename = 'S_descriptive.csv'
     desc_stats.to_csv(os.path.join(stats_directory, filename), index=False)
     print(f'Descriptive stats file {filename} created.')
@@ -152,10 +165,10 @@ def get_statistics(df, stats_directory, algorithms=None, dims=None, functions=No
     for a in algorithms:
         df_rank_all.loc[a, 'score'] = dict_rank_all[a]
 
-
     df_rank_all['ranking'] = df_rank_all['score'].rank(method='average', ascending=False)
     df_rank_all = df_rank_all.sort_values(by='ranking')
 
+    # Ranking over all test functions in all dimensions
     filename = 'S_ranking.csv'
     df_rank_all.to_csv(os.path.join(stats_directory, filename), index=True)
     print(f'Overall ranking file {filename} created.')
