@@ -63,7 +63,17 @@ def get_functions(directory_path):
 
 def run_all(dims, algorithms, functions, runs, max_evals, export_path):
 
-    algs = map(__import__, algorithms)
+    #algs = map(__import__, algorithms)
+
+    import importlib
+    algs = []
+    for name in algorithms:
+        try:
+            module = importlib.import_module(name)
+            algs.append(module)
+        except SyntaxError as e:
+            print(f'ERROR: Syntax error in Algorithm {name}.')
+
     funcs = map(__import__, functions)
     funs_list = [fun for fun in funcs]
 
