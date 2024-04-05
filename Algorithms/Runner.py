@@ -1,5 +1,15 @@
 import numpy as np
 
+class MaxEvalException(Exception):
+
+    def __init__(self, a, f):
+        self.text = f'WARNING: Algorithm {a.__module__} tried to exceed maximum number of evaluations on function = {f.__name__}.'
+
+class DimException(Exception):
+
+    def __init__(self, a, dim, length, f):
+        self.text = f'ERROR: Algorithm {a.__module__} passed array of length = {length} for problem of dim = {dim} on function = {f.__name__}.'
+
 # Runner (wrapper) class, which handles Algorithm run
 class Runner():
 
@@ -31,18 +41,18 @@ class Runner():
         # Max evaluations check
         if self._evals >= self._max_evals:
             if not self._flag_MaxEval:
-                print(f'WARNING: Algorithm {self._a.__module__} tried to exceed maximum number of evaluations.')
                 self._flag_MaxEval = True
             self._evals += 1
-            return np.random.rand()
+            raise MaxEvalException(self._a, self._func)
+            #return np.random.rand()
 
         # Check dim vs len(x)
         if self._dim != len(x):
             if not self._flag_Dim:
-                print(f'ERROR: Algorithm {self._a.__module__} passed array of length = {len(x)} for problem of dim = {self._dim}.')
                 self._flag_Dim = True
             self._best['error'] = 1
-            return np.random.rand()
+            raise DimException(self._a, self._dim, len(x), self._func)
+            #return np.random.rand()
 
         # Out of bounds check
         xx = np.clip(x, self._bounds[0], self._bounds[1])
@@ -65,9 +75,16 @@ class Runner():
 
         return ret
 
+
+
     def run(self):
 
-        self._a.run()
+        try:
+            self._a.run()
+        except MaxEvalException as e:
+            print(e.text)
+        except DimException as e:
+            print(e.text)
 
         return self._best
 
