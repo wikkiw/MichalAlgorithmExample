@@ -13,7 +13,7 @@ class DimException(Exception):
 # Runner (wrapper) class, which handles Algorithm run
 class Runner():
 
-    def __init__(self, alg, func, dim, bounds, max_evals, params=None):
+    def __init__(self, alg, func, dim, bounds, max_evals, parameters=None):
 
         self._evals = 0
         self._max_evals = max_evals
@@ -31,7 +31,7 @@ class Runner():
         self._flag_MaxEval = False
         self._flag_Dim = False
 
-        self._a = alg.Algorithm(self._func_eval_helper, dim, bounds, max_evals, params=params)
+        self._a = alg.Algorithm(self._func_eval_helper, dim, bounds, max_evals, params=parameters)
 
         pass
 
