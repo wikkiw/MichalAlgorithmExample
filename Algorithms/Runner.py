@@ -85,6 +85,9 @@ class Runner():
             print(e.text)
         except DimException as e:
             print(e.text)
+        #for checking general unexpected exceptions
+        except Exception as e:
+            print(f'WARNING: Algorithm {self._a.__module__} raised unexpected exception {e} on function = {self._func.__name__}.')
 
         return self._best
 
