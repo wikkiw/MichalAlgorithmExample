@@ -3,6 +3,7 @@ import sys
 from pathlib import Path
 import json
 import numpy as np
+import time
 
 from Algorithms.Runner import Runner
 
@@ -86,6 +87,8 @@ def run_all(dims, algorithms, functions, runs, max_evals, export_path):
             bounds = fun.get_bounds()
             for dim in dims:
                 # Creating an algorithm instance
+                t = time.ctime(time.time())
+                print(f'{t} - Starting evaluation of {alg.__name__} on {dim}D {fun.__name__}')
                 #a = alg.Algorithm(fun.evaluate, dim, bounds, max_evals)
                 export_data = []
                 export_name = 'R_' + alg.__name__ + '_' + fun.__name__ + "_" + str(dim) + '.json'
